@@ -4,7 +4,7 @@ export default function ProductsTable({ data }) {
     const allProducts = data.products
     return (
         <div>
-            <table className="table">
+            <table className="table mt-4">
                 <thead>
                     <tr>
                         <th scope="col">#</th>

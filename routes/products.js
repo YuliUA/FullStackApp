@@ -40,7 +40,8 @@ router.delete('/delete', function (req, res) {
 router.get('/:options', (req, res) => {
     try {
         const options = req.params.options.split('=')[1];
-        
+        // let year = req.body.year;
+        console.log(options)
         if (options === 'all') {
             return res.json(productsJSON);
         }
@@ -53,7 +54,7 @@ router.get('/:options', (req, res) => {
 
         }).then((result) => {
             const currencyObj = result.data.rates // return obj with all currencys base on EUR
-            const resultic = report(productsJSON.products, currencyObj)
+            const resultic = report(productsJSON.products, currencyObj, options)
             return res.json(resultic)
         }).catch((err) => {
             console.log(err)

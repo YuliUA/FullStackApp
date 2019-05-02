@@ -7,10 +7,11 @@ export default class Report extends Component {
   constructor() {
     super();
     this.state = {
-      report: 0,
+      report: '',
       products: {},
       opened: false,
-      date: ''
+      date: '',
+      year: '2019'
     }
     this.report = this.report.bind(this);
     this.handleDeleteForm = this.handleDeleteForm.bind(this);
@@ -21,10 +22,22 @@ export default class Report extends Component {
   async report(e) {
     e.preventDefault();
     let val = e.target.value;
-    const data = await axios.get(`http://localhost:5000/products/prod=${val}`)
-      .then(function (response) {
-        return response.data
-      })
+    let year = this.state.year;
+    let url = '';
+    if(val=== 'all'){
+      url = `http://localhost:5000/products/prod=${val}`
+    } else {
+      url = `http://localhost:5000/products/prod=${year}`
+    }
+    const data = await axios({
+      method: 'GET',
+      url: url,
+      data: {
+        year: this.state.year
+      }
+    }).then(function (response) {
+      return response.data
+    })
       .catch(function (error) {
         console.log(error)
       })
@@ -40,7 +53,7 @@ export default class Report extends Component {
     }
   }
 
-  
+
   async deleteByDate(e) {
     e.preventDefault();
     let date = this.state.date;
@@ -53,20 +66,20 @@ export default class Report extends Component {
     }).then(function (response) {
       return response.data
     })
-    .catch(function (error) {
-      console.log(error)
-    })
+      .catch(function (error) {
+        console.log(error)
+      })
     this.setState({
       products: data
     })
   }
-  
-  handleChange(e){
+
+  handleChange(e) {
     this.setState({
-      date: e.target.value
+      [e.target.name]: e.target.value
     })
   }
-  
+
   handleDeleteForm() {
     this.setState({
       opened: !this.state.opened
@@ -74,20 +87,26 @@ export default class Report extends Component {
   }
 
   render() {
-    const { report, products, opened } = this.state
+    const { report, products, opened, year } = this.state
     return (
       <div>
         <h1 className="text-center bg-dark text-light p-3 mb-5">Report page</h1>
-        <div className="container text-center">
-          <button type="button" onClick={this.report} value="all" className="btn btn-success btn-lg m-2">Get all products</button>
-          <button type="button" onClick={this.report} value="report" className="btn btn-dark btn-lg m-2">Report</button>
+        <div className="container">
+          <button type="button" onClick={this.report} value="all" className="btn btn-success mr-2">Get all products</button>
+          <div className="btn-group btn-group-sm ml-3">
+            <div className="input-group-prepend">
+              <input type="number" name="year" className="input-group-text" max={2025} min={2016} onChange={this.handleChange} placeholder="Year..." />
+            </div>
+            <input type="button" onClick={this.report} value="Report" className="btn btn-dark" />
+          </div>
         </div>
         {!Object.keys(products).length ? null : <ProductsTable data={products} />}
-        {report > 0 ? <h2>Your purchase is {report}UAH</h2> : null}
-        <div className="container mt-4">
-          <button type="button" onClick={this.handleDeleteForm} className="btn btn-light">Delete by Date</button>
-          {!opened ? null : <DeleteDate toggleForm={this.handleDeleteForm} submit={this.deleteByDate} change={this.handleChange}/>}
-        </div>
+        {report === '' ? null : <h2>Your purchase in {year} is {report}UAH</h2>}
+        {!Object.keys(products).length ? null :
+          <div className="container mt-4">
+            <button type="button" onClick={this.handleDeleteForm} className="btn btn-light">Delete by Date</button>
+            {!opened ? null : <DeleteDate toggleForm={this.handleDeleteForm} submit={this.deleteByDate} change={this.handleChange} />}
+          </div>}
         <div className="container mt-5">
           <Link to='/'>Back to HomePage</Link>
           <br />
