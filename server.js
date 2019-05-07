@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const products = require('./routes/products')
+const products = require('./routes/products');
+const ENV = require('dotenv')
+ENV.config();
 
 const PORT = 5000;
 

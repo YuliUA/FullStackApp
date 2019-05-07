@@ -15,8 +15,8 @@ export default function ProductsTable({ data }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {allProducts.map((el,index) => {
-                        let num = index+1
+                    {allProducts.map((el, index) => {
+                        let num = index + 1
                         return (
                             <tr key={index}>
                                 <th scope="row">{num}</th>
