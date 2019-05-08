@@ -11,7 +11,7 @@ Simple Store App - application that allows you to manage your purchases, add pro
 1. Make sure you installed Node.JS and NPM (I'm using v10.15.3 Node and v6.4.1 NPM).<br/>
 2.To clone this App from my repository, you need to execute this command in GitBash:<br/>
   `git clone https://github.com/YuliUA/Intelliarts.git` <br/>
-3.Inside root folder run npm i && npm run client-install - these commands will install all dependencies for server and client parts;
+3.Inside root folder `run npm i && npm run client-install` - these commands will install all dependencies for server and client parts;
 
 ### create your API KEY for Fixer.io
 You need to logIn on [fixer.io](https://fixer.io/) to have your own access_key.<br/>
