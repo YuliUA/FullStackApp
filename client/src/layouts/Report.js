@@ -24,7 +24,7 @@ export default class Report extends Component {
     let val = e.target.value;
     let year = this.state.year;
     let url = '';
-    if(val=== 'all'){
+    if (val === 'all') {
       url = `http://localhost:5000/products/prod=${val}`
     } else {
       url = `http://localhost:5000/products/prod=${year}`

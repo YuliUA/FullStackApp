@@ -1,7 +1,6 @@
-
 const report = function (products, currency, year) {
     let priceArr = []
-    if (year==='') {
+    if (year === '') {
         let date = new Date()
         year = date.getFullYear().toString()
     }
@@ -16,7 +15,7 @@ const report = function (products, currency, year) {
     priceArr.map(el => {
         return EURprice.push((el.price / currency[el.currency]))
     })
-    
+
     let result = EURprice.reduce((acc, val) => acc += val * currency['UAH'], 0)
 
     return result
