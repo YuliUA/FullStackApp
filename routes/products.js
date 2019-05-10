@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ProductsCtrl = require('../controllers/ProductsCtrl');
+const fs = require('fs')
 
 router.post('/purchase', async function (req, res) {
     try {
@@ -22,10 +23,19 @@ router.delete('/delete', async function (req, res) {
 
 router.get('/:options', async function (req, res) {
     try {
-        const getReport = await ProductsCtrl.getPurchase(req.params.options);
+        const getReport = await ProductsCtrl.getReport(req.params.options);
         return res.json(getReport);
     } catch (err) {
         return res.status(500).json(err);
+    }
+})
+
+router.get('/', async function(req, res){
+    try {
+        const getPurchaseList = await ProductsCtrl.getAll();
+        return res.json(getPurchaseList);
+    } catch (error) {
+        return res.status(500).json(err)
     }
 })
 

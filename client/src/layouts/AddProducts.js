@@ -9,10 +9,26 @@ export default class AddProducts extends Component {
       title: '',
       price: '',
       date: '',
-      currency: ''
+      currency: '',
+      currencys: {},
+      empty: false
     }
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.close = this.close.bind(this);
+  }
+
+  async componentDidMount() {
+    const data = await axios('http://data.fixer.io/api/symbols?access_key=6510a24035a03dfffee8032a766089b0')
+    this.setState({
+      currencys: data.data.symbols
+    })
+  }
+
+  close() {
+    this.setState({
+      empty: !this.state.empty
+    })
   }
 
   onChange(e) {
@@ -22,11 +38,20 @@ export default class AddProducts extends Component {
   }
   onSubmit(e) {
     e.preventDefault();
+    const { title, price, date, currency } = this.state;
+    //validation if user leave empty fields in form
+    if (title === '' || price === '' || date === '' || currency === '') {
+      this.setState({
+        empty: true
+      })
+      return
+    }
+
     const data = {
-      title: this.state.title,
-      price: this.state.price,
-      date: this.state.date,
-      currency: this.state.currency
+      title: title,
+      price: price,
+      date: date,
+      currency: currency
     }
     console.log(data)
     axios.post(' http://localhost:5000/products/purchase', data)
@@ -34,16 +59,23 @@ export default class AddProducts extends Component {
       title: '',
       price: '',
       date: '',
-      currency: ''
+      currency: '',
+      empty: false
     })
   }
 
   render() {
-    const { title, price, date, currency } = this.state
+    const { title, price, date, currency, currencys, empty } = this.state
     return (
       <div>
         <h1 className="text-center bg-dark text-light p-3 mb-5">AddProducts</h1>
 
+        {empty ? <div className="w-50 m-auto">
+          <button type="button" className="close" aria-label="Close" onClick={this.close}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <p className="text-danger text-center">All fields must be filled in</p>
+        </div> : null}
         <form className="container" onSubmit={this.onSubmit}>
           <div className="form-group">
             <label htmlFor="title">Select purchased product</label>
@@ -92,11 +124,7 @@ export default class AddProducts extends Component {
               onChange={this.onChange}
             >
               <option>Choose...</option>
-              <option value="UAH">UAH</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="PLN">PLN</option>
-              <option value="GBP">GBR</option>
+              {Object.keys(currencys).map((el,i)=><option key={i} title={currencys[el]}>{el}</option>)}
             </select>
           </div>
           <button type="submit" className="btn btn-lg btn-success" value="confirm">Confirm</button>

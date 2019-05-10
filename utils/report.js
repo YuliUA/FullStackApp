@@ -1,8 +1,11 @@
-const report = function (products, currency, year) {
+const report = function (products, currency, year, userCurrency) {
     let priceArr = []
     if (year === '') {
         let date = new Date()
         year = date.getFullYear().toString()
+    }
+    if (userCurrency === '' || userCurrency === null || userCurrency === undefined){
+        userCurrency = 'UAH'
     }
     let data = products.filter(el => el.date.split('-')[0] === year)
     data.map(el => {
@@ -16,7 +19,7 @@ const report = function (products, currency, year) {
         return EURprice.push((el.price / currency[el.currency]))
     })
 
-    let result = EURprice.reduce((acc, val) => acc += val * currency['UAH'], 0)
+    let result = EURprice.reduce((acc, val) => acc += val * currency[userCurrency], 0)
 
     return result
 }
