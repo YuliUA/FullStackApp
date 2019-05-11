@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { ProductsTable, DeleteDate } from './'
+import { ProductsTable, DeleteDate } from './';
 
 export default class Report extends Component {
   constructor() {
@@ -11,7 +11,7 @@ export default class Report extends Component {
       products: {},
       opened: false,
       date: '',
-      year: '2019',
+      year: '',
       years: [],
       currency: '',
       currencys: {}
@@ -25,6 +25,7 @@ export default class Report extends Component {
   async componentDidMount() {
     const yearArr = [];
     let date = new Date()
+    let year = date.getFullYear();
     let yearEnd = date.getFullYear() + 50;
     // endpoiunt of the last year will always increase
     for (let i = 2010; i <= yearEnd; i++) {
@@ -32,6 +33,7 @@ export default class Report extends Component {
     }
     const currencySymbols = await axios('http://data.fixer.io/api/symbols?access_key=6510a24035a03dfffee8032a766089b0')
     this.setState({
+      year: year,
       years: yearArr,
       currencys: currencySymbols.data.symbols
     })
@@ -45,9 +47,9 @@ export default class Report extends Component {
     let url = '';
     let dataValue = '';
     if (val === 'all') {
-      url = 'http://localhost:5000/products';
+      url = 'http://localhost:5000/products/products=all';
     } else {
-      url = `http://localhost:5000/products/prod=${year}&curr=${currency}`;
+      url = `http://localhost:5000/products/year=${year}&currency=${currency}`;
       dataValue = {
         year: this.state.year,
         currency: this.state.currency
@@ -58,6 +60,7 @@ export default class Report extends Component {
       url: url,
       data: dataValue
     }).then(function (response) {
+      console.log('response', response)
       return response.data
     }).catch(function (error) {
       console.log(error)
@@ -96,8 +99,10 @@ export default class Report extends Component {
   }
 
   handleChange(e) {
+    let currentYear = new Date();
+    let value = e.target.name === 'year' && e.target.value === '' ? currentYear.getFullYear() : e.target.value;
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     })
   }
 
@@ -115,7 +120,6 @@ export default class Report extends Component {
             years,
             currency,
             currencys } = this.state;
-console.log(this.state)
     return (
       <div className="d-flex flex-column" style={{height: '100vh'}}>
         <h1 className="text-center bg-dark text-light p-3 mb-5">Report page</h1>
@@ -152,7 +156,7 @@ console.log(this.state)
         </div>
         <div className="container mt-auto mb-4">
           <span className="px-1 font-weight-bold">&#42;</span>
-          <span>Feel free to choose the year and currency than press Report button,<br />
+          <span>Feel free to choose the year and currency then press Report button,<br />
             if you don't, the report will be by the present year and UAH currency)</span>
         </div>
       </div>
