@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function ProductsTable({ data }) {
-    const allProducts = data.products
+    const allProducts = data
     return (
         <div>
             <table className="table mt-4">

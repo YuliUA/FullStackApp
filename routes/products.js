@@ -22,7 +22,11 @@ router.delete('/delete', async function (req, res) {
 
 router.get('/:options', async function (req, res) {
     try {
-        const getReport = await ProductsCtrl.getPurchase(req.params.options);
+        if (req.params.options === 'products=all') {
+            const getPurchaseList = await ProductsCtrl.getAll();
+            return res.json(getPurchaseList);
+        }
+        const getReport = await ProductsCtrl.getReport(req.params.options);
         return res.json(getReport);
     } catch (err) {
         return res.status(500).json(err);
